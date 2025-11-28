@@ -4,5 +4,7 @@
   "link": {
     "type": "generated-index",
     "title": "ROS 2 (Robot Operating System)"
-  }
+  },
+  "collapsible": true,
+  "collapsed": false
 }

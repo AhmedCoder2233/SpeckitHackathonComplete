@@ -4,5 +4,7 @@
   "link": {
     "type": "generated-index",
     "title": "Vision-Language-Action (VLA)"
-  }
+  },
+  "collapsible": true,
+  "collapsed": false
 }

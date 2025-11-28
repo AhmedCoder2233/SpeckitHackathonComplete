@@ -1,4 +1,5 @@
 ---
+id: bipedal-locomotion
 title: Bipedal Locomotion: The Art of Walking
 ---
 

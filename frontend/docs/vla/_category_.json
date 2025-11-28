@@ -4,11 +4,5 @@
   "link": {
     "type": "generated-index",
     "title": "Vision-Language-Action (VLA)"
-  },
-  "items": [
-    "introduction",
-    "pipeline",
-    "llm-role",
-    "conclusion"
-  ]
+  }
 }

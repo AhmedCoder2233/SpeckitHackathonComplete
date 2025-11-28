@@ -4,31 +4,5 @@
   "link": {
     "type": "generated-index",
     "title": "ROS 2 (Robot Operating System)"
-  },
-  "items": [
-    {
-      "type": "doc",
-      "id": "ros2/introduction/index"
-    },
-    {
-      "type": "doc",
-      "id": "ros2/core-architecture/index"
-    },
-    {
-      "type": "doc",
-      "id": "ros2/communication-patterns/index"
-    },
-    {
-      "type": "doc",
-      "id": "ros2/python-integration-rclpy/index"
-    },
-    {
-      "type": "doc",
-      "id": "ros2/urdf/index"
-    },
-    {
-      "type": "doc",
-      "id": "ros2/conclusion/index"
-    }
-  ]
+  }
 }

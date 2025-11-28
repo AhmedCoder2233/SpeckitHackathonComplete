@@ -4,23 +4,5 @@
   "link": {
     "type": "generated-index",
     "title": "Physical AI Fundamentals"
-  },
-  "items": [
-    {
-      "type": "doc",
-      "id": "physical-ai/introduction/index"
-    },
-    {
-      "type": "doc",
-      "id": "physical-ai/core-principles/index"
-    },
-    {
-      "type": "doc",
-      "id": "physical-ai/digital-to-physical-transition/index"
-    },
-    {
-      "type": "doc",
-      "id": "physical-ai/conclusion/index"
-    }
-  ]
+  }
 }

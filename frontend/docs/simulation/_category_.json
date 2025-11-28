@@ -1,0 +1,26 @@
+{
+  "label": "Robot Simulation",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "title": "Robot Simulation"
+  },
+  "items": [
+    {
+      "type": "doc",
+      "id": "simulation/introduction/index"
+    },
+    {
+      "type": "doc",
+      "id": "simulation/platforms/index"
+    },
+    {
+      "type": "doc",
+      "id": "simulation/sensor-simulation/index"
+    },
+    {
+      "type": "doc",
+      "id": "simulation/conclusion/index"
+    }
+  ]
+}

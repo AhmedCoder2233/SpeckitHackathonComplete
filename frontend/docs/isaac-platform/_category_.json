@@ -1,0 +1,30 @@
+{
+  "label": "NVIDIA Isaac Platform",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "title": "NVIDIA Isaac Platform"
+  },
+  "items": [
+    {
+      "type": "doc",
+      "id": "isaac-platform/introduction/index"
+    },
+    {
+      "type": "doc",
+      "id": "isaac-platform/isaac-sim/index"
+    },
+    {
+      "type": "doc",
+      "id": "isaac-platform/isaac-ros/index"
+    },
+    {
+      "type": "doc",
+      "id": "isaac-platform/sim-to-real-transfer/index"
+    },
+    {
+      "type": "doc",
+      "id": "isaac-platform/conclusion/index"
+    }
+  ]
+}

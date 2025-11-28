@@ -1,9 +1,3 @@
-/**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
- */
-
 /* You can override the default Infima variables here. */
 :root {
   --ifm-color-primary: #ff0000; /* Red */
@@ -212,10 +206,480 @@ html, body {
   color: white !important;
 }
 
-.footer {
-  background-color: black;
+.navbar__toggle{
+  color:white !important;
 }
 
-.footer__copyright, .footer__link-item {
-  color: white !important;
+/* Docusaurus Button Styling */
+.button--primary {
+  background: linear-gradient(to right, #FF3333, #CC0000); /* Red gradient for primary button */
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.button--primary:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 51, 51, 0.4);
+}
+
+.button--secondary {
+  background-color: #333; /* Dark background for secondary button */
+  color: white;
+  border: 1px solid #666;
+  transition: all 0.3s ease;
+}
+
+.button--secondary:hover {
+  background-color: #555;
+  border-color: #888;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* General Body Text Color for docs */
+html, body {
+  background-color: #000000; /* Ensure a black background for the entire page */
+  color: #ddd; /* Light gray for general text on dark backgrounds */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #FF3333; /* Red headings */
+}
+
+a {
+  color: #FF6666; /* Lighter red for links */
+}
+
+a:hover {
+  color: #CC0000; /* Darker red on hover */
+}
+
+/* Styling for Docusaurus Docs Content */
+.docMainContainer {
+  background: linear-gradient(135deg, #000000 0%, #330000 100%); /* Dark gradient for doc content */
+  color: white; /* Ensure text is white */
+  padding: 2rem; /* Add some padding to the content */
+  border-radius: 8px; /* Slightly rounded corners */
+}
+
+.markdown {
+  color: white; /* Ensure markdown content text is white */
+}
+
+/* Base styles for chat components */
+.chat-primary-color {
+  --chat-primary: #FF3333; /* A vibrant red */
+  --chat-primary-dark: #CC0000; /* A darker shade for hover/active states */
+  --chat-neutral-darker: #000000; /* A deeper dark grey for backgrounds/borders */
+  --chat-text-light: white;
+  --chat-bg-dark: #000000;
+  --chat-bg-darker: #0a0a0a;
+  --chat-border-dark: #444; /* Slightly lighter border for contrast */
+  --chat-text-secondary: #aaa; /* Lighter secondary text for dark backgrounds */
+  --chat-error-color: #ff6666; /* A slightly softer red for errors */
+  --chat-gradient-red-black: linear-gradient(to right, #FF3333, #000000);
+}
+
+/* Text Selection Button */
+.chat-selection-button {
+  position: fixed;
+  background: var(--chat-gradient-red-black);
+  color: var(--chat-text-light);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(255, 51, 51, 0.4); /* Updated shadow color */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: fadeInDown 0.2s ease;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.chat-selection-button:hover {
+  opacity: 0.9; /* Subtle hover effect for gradient */
+}
+
+.chat-selection-button-icon {
+  stroke: currentColor; /* Inherit color from parent */
+}
+
+/* Floating Chat Button (FAB) */
+.chat-fab {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--chat-gradient-red-black);
+  color: var(--chat-text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 51, 51, 0.4); /* Updated shadow color */
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.chat-fab:hover {
+  transform: scale(1.1);
+  opacity: 0.9; /* Subtle hover effect for gradient */
+}
+
+.chat-fab-icon {
+  stroke: currentColor;
+}
+
+/* Popup Message */
+.chat-popup-message {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  background-color: var(--chat-bg-darker); /* Darker background */
+  color: var(--chat-text-light);
+  padding: 12px 18px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Darker shadow */
+  z-index: 999;
+  font-size: 14px;
+  font-weight: 500;
+  animation: fadeInUp 0.5s ease;
+  max-width: 200px;
+}
+
+.chat-popup-close-button {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--chat-text-secondary); /* Use secondary text color */
+}
+
+/* Chat Window */
+.chat-window-container {
+  position: fixed;
+  bottom: 30px; /* Adjusted to be above the FAB */
+  right: 30px;
+  width: 400px;
+  height: 600px; /* Increased height */
+  max-height: calc(100vh - 60px); /* Adjusted for new bottom position */
+  background-color: var(--chat-bg-dark);
+  border-radius: 12px; /* Smoother corners */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Darker, more prominent shadow */
+  z-index: 9999;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  font-family: 'Inter', sans-serif; /* Consistent font */
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ifm-font-color-base); /* Ensure text is light */
+}
+
+.chat-window-container.closed {
+  opacity: 0;
+  transform: scale(0.95);
+  display: none;
+}
+
+.chat-window-container.open {
+  opacity: 1;
+  transform: scale(1);
+  display: flex;
+}
+
+/* Chat Header */
+.chat-header {
+  padding: 16px 20px;
+  background: var(--chat-gradient-red-black);
+  color: var(--chat-text-light);
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-close-button {
+  background: none;
+  border: none;
+  color: var(--chat-text-light);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+/* Selected Text Preview */
+.chat-selected-text-preview {
+  padding: 12px 16px;
+  background-color: var(--chat-bg-darker);
+  border-bottom: 1px solid var(--chat-border-dark);
+  display: flex;
+  align-items: flex-start; /* Changed from 'start' to 'flex-start' for broader compatibility */
+  gap: 10px;
+}
+
+.chat-selected-text-icon {
+  width: 16px;
+  height: 16px;
+  stroke: var(--chat-primary);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.chat-selected-text-content-wrapper {
+  flex: 1;
+}
+
+.chat-selected-text-label {
+  font-size: 11px;
+  color: var(--chat-text-secondary);
+  margin-bottom: 4px;
+}
+
+.chat-selected-text-content {
+  font-size: 13px;
+  color: var(--chat-text-light); /* Ensure content text is light */
+  max-height: 60px;
+  overflow: auto;
+  line-height: 1.4;
+}
+
+.chat-selected-text-close-button {
+  background: none;
+  border: none;
+  color: var(--chat-text-secondary); /* Use secondary text color */
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+/* Chat Content Container */
+.chat-content-container {
+  flex: 1;
+  overflow: hidden;
+  background-color: var(--chat-bg-dark);
+}
+
+/* Chat Loading/Error Fallbacks (for BrowserOnly) */
+.chat-loading-fallback,
+.chat-error-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: var(--chat-bg-dark);
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+  padding: 20px;
+}
+
+.chat-loading-fallback {
+  color: var(--chat-text-secondary);
+  gap: 16px;
+}
+
+.chat-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--chat-border-dark);
+  border-top-color: var(--chat-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.chat-loading-text {
+  font-size: 14px;
+}
+
+.chat-error-fallback {
+  color: var(--chat-error-color);
+  gap: 12px;
+}
+
+.chat-error-icon {
+  width: 48px;
+  height: 48px;
+  stroke: currentColor;
+}
+
+.chat-error-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.chat-error-message {
+  font-size: 13px;
+  color: var(--chat-text-secondary);
+}
+
+/* Docusaurus Navbar Styling */
+.navbar {
+  background: linear-gradient(to right, #FF3333, #000000) !important; /* Red/Black gradient for navbar */
+  color: white; /* Ensure text is white */
+}
+
+.navbar__brand,
+.navbar__item,
+.navbar__link {
+  color: white !important; /* Ensure navbar links and brand text are white */
+}
+.navbar__toggle{
+  color:white !important;
+}
+
+/* Docusaurus Button Styling */
+.button--primary {
+  background: linear-gradient(to right, #FF3333, #CC0000); /* Red gradient for primary button */
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.button--primary:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 51, 51, 0.4);
+}
+
+.button--secondary {
+  background-color: #333; /* Dark background for secondary button */
+  color: white;
+  border: 1px solid #666;
+  transition: all 0.3s ease;
+}
+
+.button--secondary:hover {
+  background-color: #555;
+  border-color: #888;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* General Body Text Color for docs */
+html, body {
+  background-color: #000000; /* Ensure a black background for the entire page */
+  color: #ddd; /* Light gray for general text on dark backgrounds */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #FF3333; /* Red headings */
+}
+
+a {
+  color: #FF6666; /* Lighter red for links */
+}
+
+a:hover {
+  color: #CC0000; /* Darker red on hover */
+}
+
+/* Styling for Docusaurus Docs Content */
+.docMainContainer {
+  background: linear-gradient(135deg, #000000 0%, #330000 100%); /* Dark gradient for doc content */
+  color: white; /* Ensure text is white */
+  padding: 2rem; /* Add some padding to the content */
+  border-radius: 8px; /* Slightly rounded corners */
+}
+
+.markdown {
+  color: white; /* Ensure markdown content text is white */
+}
+
+
+/* Docusaurus Sidebar Styling */
+.theme-doc-sidebar-container {
+  background-color: #000000; /* Black background for the entire sidebar */
+  border-right: 1px solid #333; /* Subtle border to separate from content */
+}
+
+.menu {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.menu__list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.menu__list-item {
+  margin-bottom: 0.25rem;
+}
+
+.menu__link {
+  color: #ffffff; /* White text for all sidebar links */
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+  display: flex; /* Allow flexbox properties for alignment */
+  align-items: center; /* Vertically align text and icons */
+}
+
+.menu__link:hover {
+  color: #ff0000; /* Red on hover */
+  background-color: #333333; /* Darker background on hover */
+  text-decoration: none;
+}
+
+.menu__link--active {
+  background-color: #ff0000; /* Red background for active link */
+  color: #ffffff; /* White text for active link */
+  font-weight: bold;
+}
+
+.menu__link--active:hover {
+  color: #ffffff; /* Keep white on hover for active link */
+  background-color: #cc0000; /* Slightly darker red on hover for active */
+}
+
+/* Styling for collapsible categories */
+.theme-doc-sidebar-item-category-parent > .menu__list-item-collapsible-header > .menu__link {
+  color: #ffffff; /* White text for category headers */
+  font-weight: bold;
+}
+
+.theme-doc-sidebar-item-category-parent > .menu__list-item-collapsible-header > .menu__link:hover {
+  color: #ff0000; /* Red on hover for category headers */
+  background-color: #333333; /* Darker background on hover */
+}
+
+/* Arrow/icon for collapsible items */
+.menu__caret {
+  color: #ffffff; /* White caret icon */
+}
+
+/* Adjust padding for nested items */
+.menu__list-item-collapsible .menu__list {
+  padding-left: 1rem; /* Indent nested lists */
+}
+
+/* Ensure nested links also have white color */
+.menu__list-item-collapsible .menu__link {
+  color: #eeeeee; /* Slightly lighter white for nested links */
+}
+
+.menu__list-item-collapsible .menu__link:hover {
+  color: #ff6666; /* Lighter red on hover for nested links */
+}
+
+.menu__list-item-collapsible .menu__link--active {
+  background-color: #cc0000; /* Darker red for active nested link */
+  color: #ffffff;
 }

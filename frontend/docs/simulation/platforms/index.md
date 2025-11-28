@@ -1,5 +1,5 @@
 ---
-title: Simulation Platforms: Gazebo vs. Unity
+title: "Simulation Platforms: Gazebo vs. Unity"
 ---
 
 # Simulation Platforms: Gazebo vs. Unity

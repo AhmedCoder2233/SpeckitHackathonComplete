@@ -4,13 +4,5 @@
   "link": {
     "type": "generated-index",
     "title": "Hardware Setup"
-  },
-  "items": [
-    "introduction",
-    "workstation-requirements",
-    "edge-computing-jetson",
-    "sensors-actuators",
-    "lab-infrastructure",
-    "conclusion"
-  ]
+  }
 }

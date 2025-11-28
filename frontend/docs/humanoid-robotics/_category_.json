@@ -4,13 +4,5 @@
   "link": {
     "type": "generated-index",
     "title": "Humanoid Robotics"
-  },
-  "items": [
-    "introduction",
-    "kinematics-dynamics",
-    "bipedal-locomotion",
-    "manipulation-grasping",
-    "human-robot-interaction",
-    "conclusion"
-  ]
+  }
 }

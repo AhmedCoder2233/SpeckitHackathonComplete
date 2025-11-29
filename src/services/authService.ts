@@ -18,33 +18,36 @@ const authApi = axios.create({
 authApi.interceptors.response.use(
   (response) => response,
   (error) => {
-    // This is where global error handling can occur
     console.error("API call failed:", error.response || error);
-
-    // Extract a more user-friendly message
     const errorMessage = error.response?.data?.detail || error.message || 'An unexpected error occurred.';
-
-    // Re-throw the error with a custom message so individual calls can catch it
-    // or further process it if needed.
     return Promise.reject(new Error(errorMessage));
   }
 );
 
+// Helper function to check if we're in the browser
+const isBrowser = (): boolean => {
+  return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+};
+
 const saveUserData = (token: string, user: User) => {
+  if (!isBrowser()) return;
   localStorage.setItem('token', token);
   localStorage.setItem('user', JSON.stringify(user));
 };
 
 const clearUserData = () => {
+  if (!isBrowser()) return;
   localStorage.removeItem('token');
   localStorage.removeItem('user');
 };
 
 const getToken = (): string | null => {
+  if (!isBrowser()) return null;
   return localStorage.getItem('token');
 };
 
 const getUser = (): User | null => {
+  if (!isBrowser()) return null;
   const user = localStorage.getItem('user');
   return user ? JSON.parse(user) : null;
 };
@@ -78,7 +81,7 @@ const getMe = async (): Promise<User | null> => {
     return response.data;
   } catch (error) {
     console.error("Failed to fetch user data (token likely invalid):", error);
-    clearUserData(); // Clear invalid token data
+    clearUserData();
     return null;
   }
 };

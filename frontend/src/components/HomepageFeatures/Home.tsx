@@ -3,9 +3,9 @@
 import React, { useEffect } from "react";
 import BrowserOnly from "@docusaurus/BrowserOnly";
 import { useChatContext } from "@site/src/context/ChatKitContext";
+import '../../../src/css/chatkit-custom.css';
 
 export default function MainHome() {
-  console.log("MainHome is rendering");
   const {
     isOpen,
     hasOpenedOnce,
@@ -64,170 +64,142 @@ export default function MainHome() {
 
   return (
     <>
-      <div className="chat-primary-color">
-        {showSelectionButton && !isOpen && (
-          <div
-            onClick={handleAskAboutSelection}
-            className="chat-selection-button"
-            style={{
-              left: `${selectionPosition.x}px`,
-              top: `${selectionPosition.y}px`,
-              transform: "translate(-50%, -100%)",
-            }}
+      {/* Floating Chat Button */}
+      <div onClick={toggleChat} className="chatkit-toggle-button">
+        {isOpen ? (
+          <svg
+            className="chatkit-fab-icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
           >
-            <svg
-              className="chat-selection-button-icon"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
-            Ask about this
-          </div>
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        ) : (
+          <svg
+            className="chatkit-fab-icon"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
         )}
+      </div>
 
-        {/* Floating Chat Button */}
-        <div onClick={toggleChat} className="chat-fab">
-          {isOpen ? (
-            <svg
-              className="chat-fab-icon"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          ) : (
-            <svg
-              className="chat-fab-icon"
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-            </svg>
-          )}
+      {/* Popup Message */}
+      {showPopup && !isOpen && (
+        <div className="chatkit-popup-message">
+          How can I help you? 💬
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowPopup(false);
+            }}
+            className="chatkit-popup-close-button"
+          >
+            ×
+          </button>
         </div>
+      )}
 
-        {/* Popup Message */}
-        {showPopup && !isOpen && (
-          <div className="chat-popup-message">
-            How can I help you? 💬
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowPopup(false);
-              }}
-              className="chat-popup-close-button"
-            >
+      {/* Chat Window */}
+      {hasOpenedOnce && (
+        <div className={`chatkit-container ${isOpen ? "open" : "closed"}`}>
+          {/* Chat Header */}
+          <div className="chatkit-header">
+            <span>Physical AI & Humanoid Robotics Assistant</span>
+            <button onClick={toggleChat} className="chatkit-close-button">
               ×
             </button>
           </div>
-        )}
 
-        {/* Chat Window */}
-        {hasOpenedOnce && (
-          <div className={`chat-window-container ${isOpen ? "open" : "closed"}`}>
-            {/* Chat Header */}
-            <div className="chat-header">
-              <span>Physical AI & Humanoid Robotics Assistant</span>
-              <button onClick={toggleChat} className="chat-close-button">
+          {/* Selected Text Preview */}
+          {selectedText && (
+            <div className="chatkit-selected-text-preview">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="chatkit-selected-text-icon"
+              >
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+
+              <div className="chatkit-selected-text-content-wrapper">
+                <div className="chatkit-selected-text-label">Selected text:</div>
+                <div className="chatkit-selected-text-content">"{selectedText}"</div>
+              </div>
+
+              <button
+                onClick={() => setSelectedText(null)}
+                className="chatkit-selected-text-close-button"
+              >
                 ×
               </button>
             </div>
+          )}
 
-            {/* Selected Text Preview */}
-            {selectedText && (
-              <div className="chat-selected-text-preview">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="chat-selected-text-icon"
-                >
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                  <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-
-                <div className="chat-selected-text-content-wrapper">
-                  <div className="chat-selected-text-label">Selected text:</div>
-                  <div className="chat-selected-text-content">"{selectedText}"</div>
+          {/* Chat Content */}
+          <div className="chatkit-body">
+            <BrowserOnly
+              fallback={
+                <div className="chatkit-loading-fallback">
+                  <div className="chatkit-loading-spinner" />
+                  <div className="chatkit-loading-text">Loading chat...</div>
                 </div>
+              }
+            >
+              {() => {
+                try {
+                  const ChatKitPanel =
+                    require("../HomepageFeatures/ChatKitPanel").default;
+                  return (
+                    <ChatKitPanel
+                      selectedText={selectedText}
+                      onThreadChange={handleThreadChange}
+                      onResponseCompleted={handleResponseCompleted}
+                    />
+                  );
+                } catch (err: any) {
+                  console.error("❌ Error loading ChatKitPanel:", err);
+                  return (
+                    <div className="chatkit-error-fallback">
+                      <svg
+                        className="chatkit-error-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                      </svg>
 
-                <button
-                  onClick={() => setSelectedText(null)}
-                  className="chat-selected-text-close-button"
-                >
-                  ×
-                </button>
-              </div>
-            )}
-
-            {/* Chat Content */}
-            <div className="chat-content-container">
-              <BrowserOnly
-                fallback={
-                  <div className="chat-loading-fallback">
-                    <div className="chat-loading-spinner" />
-                    <div className="chat-loading-text">Loading chat...</div>
-                  </div>
-                }
-              >
-                {() => {
-                  try {
-                    const ChatKitPanel =
-                      require("../HomepageFeatures/ChatKitPanel").default;
-                    return (
-                      <ChatKitPanel
-                        selectedText={selectedText}
-                        onThreadChange={handleThreadChange}
-                        onResponseCompleted={handleResponseCompleted}
-                      />
-                    );
-                  } catch (err: any) {
-                    console.error("❌ Error loading ChatKitPanel:", err);
-                    return (
-                      <div className="chat-error-fallback">
-                        <svg
-                          className="chat-error-icon"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <circle cx="12" cy="12" r="10" />
-                          <line x1="12" y1="8" x2="12" y2="12" />
-                          <line x1="12" y1="16" x2="12.01" y2="16" />
-                        </svg>
-
-                        <div>
-                          <div className="chat-error-title">Failed to load chat</div>
-                          <div className="chat-error-message">{err.message}</div>
-                        </div>
+                      <div>
+                        <div className="chatkit-error-title">Failed to load chat</div>
+                        <div className="chatkit-error-message">{err.message}</div>
                       </div>
-                    );
-                  }
-                }}
-              </BrowserOnly>
-            </div>
+                    </div>
+                  );
+                }
+              }}
+            </BrowserOnly>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 }

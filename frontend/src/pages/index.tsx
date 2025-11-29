@@ -176,7 +176,7 @@ export default function Home(): ReactNode {
           <div className={clsx('margin-top--xl', styles.hardwareButtonWrapper)}>
             <Link
               className={clsx('button button--primary button--lg', styles.hardwareButton)}
-              to="/docs/hardware-details">
+              to="/docs/category/7-hardware-setup">
               <span>See Full Hardware Details</span>
               <span className={styles.buttonArrowHardware}>→</span>
             </Link>

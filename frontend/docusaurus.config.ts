@@ -13,6 +13,13 @@ const config: Config = {
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
   },
+  
+      scripts: [
+      {
+        src: "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+        async: true,
+      },
+    ],
 
   // Set the production url of your site here
   url: 'https://your-docusaurus-site.example.com',
@@ -24,6 +31,7 @@ const config: Config = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'panaverse', // Usually your GitHub org/user name.
   projectName: 'physical-ai-textbook', // Usually your repo name.
+
 
   onBrokenLinks: 'throw',
 
@@ -48,7 +56,7 @@ const config: Config = {
         },
         blog: false, // Disabled the blog plugin
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: [require.resolve('./src/css/custom.css'), require.resolve('./src/css/sidebar-custom.css')],
         },
       } satisfies Preset.Options,
     ],
@@ -73,8 +81,6 @@ const config: Config = {
           position: 'left',
           label: 'Chapters',
         },
-        {to: '/hardware', label: 'Hardware', position: 'left'},
-        {to: '/about', label: 'About', position: 'left'},
         {
           type: 'localeDropdown',
           position: 'right',

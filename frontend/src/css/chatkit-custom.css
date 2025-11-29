@@ -1,0 +1,125 @@
+/* ChatKit Custom Styling - Red & Black Theme */
+.chatkit-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: 400px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(255, 0, 0, 0.3);
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #1a1a1a, #000000);
+  border: 2px solid #ff0000;
+}
+
+.chatkit-header {
+  background: linear-gradient(90deg, #ff0000, #cc0000);
+  color: white;
+  padding: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chatkit-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.chatkit-body {
+  background: #0d0d0d;
+  color: #e0e0e0;
+  padding: 16px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.chatkit-message-user {
+  background: #ff0000;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin: 8px 0;
+  align-self: flex-end;
+  max-width: 70%;
+}
+
+.chatkit-message-bot {
+  background: #1a1a1a;
+  color: #e0e0e0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin: 8px 0;
+  border: 1px solid #ff0000;
+  max-width: 70%;
+}
+
+.chatkit-input {
+  background: #1a1a1a;
+  border: 2px solid #ff0000;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.chatkit-input:focus {
+  border-color: #ff3333;
+}
+
+.chatkit-send-button {
+  background: linear-gradient(90deg, #ff0000, #cc0000);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.chatkit-send-button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #ff3333, #ff0000);
+}
+
+.chatkit-toggle-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff0000, #cc0000);
+  border: 3px solid #000;
+  box-shadow: 0 4px 16px rgba(255, 0, 0, 0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+  transition: transform 0.3s;
+}
+
+.chatkit-toggle-button:hover {
+  transform: scale(1.1);
+}
+
+/* Scrollbar styling */
+.chatkit-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatkit-body::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+.chatkit-body::-webkit-scrollbar-thumb {
+  background: #ff0000;
+  border-radius: 4px;
+}

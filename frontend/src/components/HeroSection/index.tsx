@@ -40,8 +40,8 @@ function HeroSection() {
             </Link>
             <Link
               className={clsx('button', styles.secondaryButton)}
-              to="/docs/curriculum">
-              View Curriculum
+              to="/docs/category/1-physical-ai-fundamentals">
+              View Physical AI Fundamentals
             </Link>
           </div>
         </div>

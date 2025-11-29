@@ -15,27 +15,27 @@ interface CourseModule {
 const ModuleList: CourseModule[] = [
   {
     icon: '🤖',
-    title: 'The Robotic Nervous System (ROS 2)',
+    title: 'The Robot Operating System (ROS 2)',
     description: 'Master middleware for robot control with ROS 2 nodes, topics, and services',
-    link: '/docs/ros-2',
+    link: '/docs/category/2-ros-2-robot-operating-system',
   },
   {
     icon: '🎮',
     title: 'The Digital Twin (Gazebo & Unity)',
     description: 'Build physics simulations and high-fidelity virtual environments',
-    link: '/docs/gazebo-unity',
+    link: '/docs/simulation/platforms/',
   },
   {
     icon: '🧠',
     title: 'The AI-Robot Brain (NVIDIA Isaac)',
     description: 'Advanced perception, training, and sim-to-real transfer techniques',
-    link: '/docs/nvidia-isaac',
+    link: '/docs/category/4-nvidia-isaac-platform',
   },
   {
     icon: '🗣️',
     title: 'Vision-Language-Action (VLA)',
     description: 'Integrate voice commands and LLMs for cognitive robot planning',
-    link: '/docs/vla',
+    link: '/docs/category/5-vision-language-action-vla',
   },
 ];
 

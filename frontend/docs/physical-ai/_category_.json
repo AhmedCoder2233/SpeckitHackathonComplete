@@ -1,10 +1,10 @@
 {
-  "label": "Physical AI Fundamentals",
+  "label": "1. Physical AI Fundamentals",
   "position": 1,
   "link": {
     "type": "generated-index",
     "title": "Physical AI Fundamentals"
   },
   "collapsible": true,
-  "collapsed": false
+  "collapsed": true
 }

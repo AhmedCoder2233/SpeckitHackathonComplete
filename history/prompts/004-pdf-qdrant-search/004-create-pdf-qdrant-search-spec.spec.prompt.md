@@ -1,24 +1,24 @@
 ---
-id: 001
+id: 004
 title: Create PDF Qdrant Search Spec
 stage: spec
 date: 2025-11-29
 surface: agent
 model: gemini-1.5-pro
-feature: 001-pdf-qdrant-search
-branch: 001-pdf-qdrant-search
+feature: 004-pdf-qdrant-search
+branch: 004-pdf-qdrant-search
 user: Ahmed
 command: /sp.specify
 labels: [spec, feature-creation, qdrant, pdf, search]
 links:
-  spec: specs/001-pdf-qdrant-search/spec.md
+  spec: specs/004-pdf-qdrant-search/spec.md
   ticket: null
   adr: null
   pr: null
 files:
-  - specs/001-pdf-qdrant-search/spec.md
-  - specs/001-pdf-qdrant-search/checklists/requirements.md
-  - history/prompts/001-pdf-qdrant-search/001-create-pdf-qdrant-search-spec.spec.prompt.md
+  - specs/004-pdf-qdrant-search/spec.md
+  - specs/004-pdf-qdrant-search/checklists/requirements.md
+  - history/prompts/004-pdf-qdrant-search/004-create-pdf-qdrant-search-spec.spec.prompt.md
 tests:
   - null
 ---

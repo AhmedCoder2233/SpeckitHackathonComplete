@@ -8,161 +8,435 @@ description: Create or update the feature specification from a natural language 
 ## User Input
 
 ```text
-# PDF Upload and Search System with Qdrant Vector Database
+# Add Authentication and Personalization to Existing Docusaurus Book (TypeScript)
 
-## Overview
-Create a Python script that uploads PDF files to Qdrant vector database and provides search functionality for testing within the same file.
+## Context
+I have an EXISTING Docusaurus book already created. I need to ADD authentication and personalization features to it using TypeScript. DO NOT create a new book, only add these features to the existing one.
 
-## File Structure
-```
-backend/
-├── upload.py
-└── (PDF files to be uploaded)
-```
+## Tech Stack
+- **Language**: TypeScript (use .tsx and .ts files)
+- **Framework**: Docusaurus (existing)
+- **Auth**: Custom FastAPI Backend with JWT
+- **AI for Personalization**: Google Gemini API (for content personalization)
+- **Storage**: localStorage (client-side)
 
 ## Requirements
 
-### Dependencies
-- Python 3.8+
-- qdrant-client
-- PyPDF2 or pypdf (for PDF text extraction)
-- sentence-transformers (for embeddings)
-- python-dotenv (optional, for environment variables)
+### 1. FastAPI Backend Setup (Python)
 
-### Installation
+**Create a separate FastAPI backend for authentication:**
+
+**Install dependencies:**
 ```bash
-pip install qdrant-client pypdf sentence-transformers python-dotenv
+pip install fastapi uvicorn python-jose[cryptography] passlib[bcrypt] python-multipart
 ```
 
-## Functionality
+**File: backend/main.py**
 
-### Core Features
+**Requirements:**
+- FastAPI app with CORS enabled
+- JWT token generation and validation
+- Password hashing with bcrypt
+- In-memory user storage (for simplicity) or SQLite
 
-#### 1. PDF Upload Mode
-- Accept PDF file path as command-line argument
-- Extract text content from all pages of the PDF
-- Split extracted text into manageable chunks (e.g., 500-1000 characters with overlap)
-- Generate vector embeddings using sentence-transformers (e.g., 'all-MiniLM-L6-v2')
-- Store vectors with metadata in Qdrant collection
-- Metadata should include: filename, page number, chunk index, original text
+**Endpoints needed:**
+```python
+POST /api/auth/signup
+POST /api/auth/login
+GET /api/auth/me (verify token)
+```
 
-#### 2. Search Mode
-- Accept search query as command-line argument
-- Convert query to vector embedding using same model
-- Perform similarity search in Qdrant
-- Return top K results (e.g., top 5) with:
-  - Similarity score
-  - Source filename
-  - Page number
-  - Matched text chunk
+**JWT Configuration:**
+- Algorithm: HS256
+- Token expiration: 7 days
+- Secret key: Generate a secure random key
 
-#### 3. Qdrant Configuration
-- Connection: Local Qdrant instance or Qdrant Cloud
-- Collection name: "pdf_documents" (configurable)
-- Vector size: Based on embedding model (384 for all-MiniLM-L6-v2)
-- Distance metric: Cosine similarity
+**User Model:**
+```python
+{
+  "user_id": "uuid",
+  "email": "string",
+  "name": "string",
+  "hashed_password": "string",
+  "preferences": {
+    "level": "beginner | intermediate | advanced",
+    "languages": ["Python", "JavaScript"],
+    "ai_experience": "none | basic | intermediate | advanced",
+    "hardware_knowledge": "basic | intermediate | advanced"
+  }
+}
+```
 
-## Command-Line Interface
-
-### Upload Command
+**Run backend:**
 ```bash
-python upload.py upload <pdf_file_path>
+uvicorn backend.main:app --reload --port 8000
 ```
-Example:
+
+### 2. Frontend Auth Types (TypeScript)
+
+**Install dependencies:**
 ```bash
-python upload.py upload document.pdf
+npm install axios
+npm install @google/generative-ai
+npm install lucide-react
 ```
 
-### Search Command
-```bash
-python upload.py search "<query_text>"
-```
-Example:
-```bash
-python upload.py search "machine learning algorithms"
-```
+**Create auth types:**
+```typescript
+// src/types/user.ts
+export interface UserPreferences {
+  level: 'beginner' | 'intermediate' | 'advanced';
+  languages: string[];
+  aiExperience: 'none' | 'basic' | 'intermediate' | 'advanced';
+  hardwareKnowledge: 'basic' | 'intermediate' | 'advanced';
+}
 
-### List Command (Optional)
-```bash
-python upload.py list
-```
-Lists all uploaded documents in the collection.
+export interface User {
+  userId: string;
+  email: string;
+  name: string;
+  preferences: UserPreferences;
+  isLoggedIn: boolean;
+  token: string;
+}
 
-## Configuration
+export interface SignupData {
+  email: string;
+  password: string;
+  name: string;
+  preferences: UserPreferences;
+}
 
-### Environment Variables (Optional)
-```
-QDRANT_HOST=localhost
-QDRANT_PORT=6333
-QDRANT_API_KEY=<your_api_key>  # If using Qdrant Cloud
-COLLECTION_NAME=pdf_documents
-EMBEDDING_MODEL=all-MiniLM-L6-v2
-CHUNK_SIZE=800
-CHUNK_OVERLAP=200
-```
-
-### Default Settings
-- Qdrant Host: `localhost:6333` (local instance)
-- Collection Name: `pdf_documents`
-- Embedding Model: `all-MiniLM-L6-v2`
-- Chunk Size: 800 characters
-- Chunk Overlap: 200 characters
-- Top K Results: 5
-
-## Expected Behavior
-
-### Upload Process
-1. Validate PDF file exists
-2. Extract text from PDF
-3. Chunk the text with overlaps
-4. Generate embeddings for each chunk
-5. Create/connect to Qdrant collection
-6. Upload vectors with metadata
-7. Display success message with number of chunks uploaded
-
-### Search Process
-1. Validate search query is provided
-2. Generate embedding for query
-3. Search Qdrant collection
-4. Display ranked results with:
-   - Rank number
-   - Similarity score (0-1)
-   - Source file and page
-   - Text snippet (first 200 characters)
-
-## Error Handling
-- File not found errors
-- Qdrant connection errors
-- Invalid command-line arguments
-- Empty PDF files
-- PDF extraction errors
-- Embedding generation errors
-
-## Output Format
-
-### Upload Output
-```
-Uploading PDF: document.pdf
-Extracting text... Done
-Creating 25 chunks...
-Generating embeddings...
-Uploading to Qdrant...
-✓ Successfully uploaded 25 chunks from document.pdf
+export interface LoginData {
+  email: string;
+  password: string;
+}
 ```
 
-### Search Output
+**Create API service:**
+```typescript
+// src/services/authService.ts
+import axios from 'axios';
+import type { SignupData, LoginData, User } from '../types/user';
+
+const API_BASE_URL = 'http://localhost:8000/api/auth';
+
+export const authService = {
+  signup: async (data: SignupData) => {
+    const response = await axios.post(`${API_BASE_URL}/signup`, data);
+    return response.data;
+  },
+
+  login: async (data: LoginData) => {
+    const response = await axios.post(`${API_BASE_URL}/login`, data);
+    return response.data;
+  },
+
+  verifyToken: async (token: string) => {
+    const response = await axios.get(`${API_BASE_URL}/me`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  }
+};
 ```
-Searching for: "machine learning algorithms"
 
-Results:
-1. Score: 0.87 | File: document.pdf | Page: 5
-   "Machine learning algorithms are divided into supervised and unsupervised..."
+### 3. Signup Component (TypeScript)
 
-2. Score: 0.82 | File: document.pdf | Page: 12
-   "Common algorithms include decision trees, neural networks, and..."
+**File: src/components/Auth/SignupForm.tsx**
 
-3. Score: 0.78 | File: document.pdf | Page: 8
-   "The choice of algorithm depends on the problem type and data..."
+**Requirements:**
+- Create a React component using TypeScript
+- Call FastAPI `/api/auth/signup` endpoint
+- Collect the following information:
+
+**Basic Auth Fields:**
+- Email (input type="email")
+- Password (input type="password")
+- Name (input type="text")
+
+**Background Questions (collect during signup):**
+
+1. **Programming Experience** (radio buttons):
+   - Beginner (new to programming)
+   - Intermediate (1-3 years)
+   - Advanced (3+ years)
+
+2. **Known Programming Languages** (checkboxes - multiple select):
+   - Python
+   - JavaScript
+   - TypeScript
+   - Java
+   - C++
+   - Other
+
+3. **AI/ML Experience** (dropdown/select):
+   - None
+   - Basic
+   - Intermediate
+   - Advanced
+
+4. **Hardware Knowledge** (dropdown/select):
+   - Basic
+   - Intermediate
+   - Advanced
+
+**After signup success:**
+- Receive JWT token from backend
+- Save user data + token to localStorage with key "userData"
+- Format:
+```json
+{
+  "userId": "uuid_from_backend",
+  "email": "user@example.com",
+  "name": "John Doe",
+  "token": "jwt_token_here",
+  "preferences": {
+    "level": "beginner",
+    "languages": ["Python", "JavaScript"],
+    "aiExperience": "basic",
+    "hardwareKnowledge": "intermediate"
+  },
+  "isLoggedIn": true
+}
+```
+- Redirect to book homepage after successful signup
+
+### 4. Login Component (TypeScript)
+
+**File: src/components/Auth/LoginForm.tsx**
+
+**Requirements:**
+- Simple email/password login form
+- Call FastAPI `/api/auth/login` endpoint
+- On successful login:
+  - Receive JWT token from backend
+  - Save token + user data to localStorage
+  - Set isLoggedIn to true
+  - Redirect to homepage
+
+### 5. Auth Button in Navbar (TypeScript)
+
+**File: src/components/Auth/AuthButton.tsx**
+
+**Requirements:**
+- Show "Login" and "Signup" buttons if user NOT logged in
+- Show user name and "Logout" button if user IS logged in
+- Check localStorage on component mount
+- Verify JWT token validity on mount (call `/api/auth/me`)
+- If token expired, clear localStorage and show login
+- Integrate into Docusaurus navbar
+
+**Modify: src/theme/Navbar/index.tsx** (if needed)
+
+### 6. Content Personalization Button (TypeScript + Gemini API)
+
+**File: src/components/PersonalizeButton.tsx**
+
+**Requirements:**
+- Button visible ONLY when user is logged in
+- Button text: "🎯 Personalize for My Level"
+- Position: Top of every chapter/page
+
+**When clicked:**
+1. Get user's programming level from localStorage (beginner/intermediate/advanced)
+2. Get current page content
+3. Send to **Google Gemini API** with this prompt:
+```typescript
+const prompt = `
+Rewrite the following content for a ${userLevel} level programmer.
+
+Guidelines:
+- If beginner: Use simple language, add more explanations, use real-world analogies, avoid complex jargon, add more examples
+- If intermediate: Balanced technical depth, assume basic programming knowledge, moderate complexity
+- If advanced: Technical and concise, assume strong fundamentals, use advanced terminology, be brief
+
+Original Content:
+${pageContent}
+
+Rewritten Content:
+`;
+```
+
+4. Replace page content with Gemini's response
+5. Show loading spinner during API call
+6. Handle errors gracefully
+
+**Gemini API Integration:**
+```typescript
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+// Use model.generateContent(prompt) to get personalized content
+```
+
+**Environment Variable needed:**
+```
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+### 7. Edit Page Button (TypeScript)
+
+**File: src/components/EditPageButton.tsx**
+
+**Requirements:**
+- Button visible ONLY when user is logged in
+- Button text: "✏️ Edit Page"
+- Position: Top-right corner of page
+
+**Functionality:**
+- Click "Edit Page" → enable contenteditable on page content
+- Show "Save Changes" and "Cancel" buttons when editing
+- On "Save Changes":
+  - Save edited HTML to localStorage
+  - Key format: `editedPages_${userId}`
+  - Value format:
+```json
+  {
+    "page_intro": "<edited HTML>",
+    "page_chapter1": "<edited HTML>",
+    "page_chapter2": "<edited HTML>"
+  }
+```
+- On "Cancel" → restore original content without saving
+- Add "Reset to Original" button to restore default content
+
+**Important:**
+- Edits are PERSONAL (saved in user's localStorage only)
+- Check localStorage on page load to show user's edited version
+- If edited version exists, show it; otherwise show original
+
+### 8. Content Wrapper Component (TypeScript)
+
+**File: src/components/ContentWrapper.tsx**
+
+**Requirements:**
+- Wrap all page content
+- Check if user is logged in (verify JWT token)
+- If logged in:
+  - Show PersonalizeButton
+  - Show EditPageButton
+  - Check for saved edits in localStorage
+  - Display personalized or edited content if exists
+- If NOT logged in:
+  - Show original content only
+  - Hide all edit/personalize features
+
+### 9. Integration with Existing Docusaurus
+
+**Modify: src/theme/DocItem/Layout/index.tsx**
+- Wrap existing layout with ContentWrapper
+- This automatically adds personalize and edit buttons to ALL pages
+
+**Create: src/pages/signup.tsx**
+- Dedicated signup page
+
+**Create: src/pages/login.tsx**
+- Dedicated login page
+
+## File Structure:
+
+### Backend (FastAPI):
+```
+backend/
+├── main.py                    (FastAPI app with JWT auth)
+├── models.py                  (User models)
+├── auth.py                    (JWT utilities)
+└── requirements.txt
+```
+
+### Frontend (Docusaurus):
+```
+src/
+├── types/
+│   └── user.ts                     (NEW - TypeScript interfaces)
+├── services/
+│   └── authService.ts              (NEW - API calls to FastAPI)
+├── components/
+│   ├── Auth/
+│   │   ├── SignupForm.tsx          (NEW)
+│   │   ├── LoginForm.tsx           (NEW)
+│   │   └── AuthButton.tsx          (NEW)
+│   ├── PersonalizeButton.tsx       (NEW - uses Gemini)
+│   ├── EditPageButton.tsx          (NEW)
+│   └── ContentWrapper.tsx          (NEW)
+├── theme/
+│   ├── DocItem/
+│   │   └── Layout/index.tsx        (MODIFY)
+│   └── Navbar/index.tsx            (MODIFY - add auth buttons)
+└── pages/
+    ├── signup.tsx                  (NEW)
+    └── login.tsx                   (NEW)
+```
+
+## Environment Variables:
+
+**Frontend (.env):**
+```
+GEMINI_API_KEY=your_gemini_api_key_here
+REACT_APP_API_URL=http://localhost:8000
+```
+
+**Backend (.env):**
+```
+SECRET_KEY=your_jwt_secret_key_here
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_DAYS=7
+```
+
+## LocalStorage Keys Used:
+- `userData` - stores user info, preferences, and JWT token
+- `editedPages_${userId}` - stores user's page edits
+
+## User Flow:
+
+### First Time User:
+1. Visits book → sees "Login/Signup" buttons in navbar
+2. Clicks "Signup" → fills form with 5 background questions
+3. Backend creates user and returns JWT token
+4. Frontend saves token + user data to localStorage
+5. Redirected to book homepage
+6. Every page now shows:
+   - "🎯 Personalize for My Level" button (top)
+   - "✏️ Edit Page" button (top-right)
+7. Clicks "Personalize" → Gemini API adjusts content to their level
+8. Clicks "Edit" → can modify content, saves to localStorage
+
+### Returning User (Login):
+1. Clicks "Login" → enters credentials
+2. Backend validates credentials and returns JWT token
+3. Frontend saves token to localStorage
+4. Logged in → sees their name in navbar
+5. All pages show their previous edits (if any)
+6. Can personalize any page with one click
+7. Can continue editing pages
+
+## Important Notes:
+- Use TypeScript for ALL frontend components (.tsx files)
+- Use Python for FastAPI backend
+- JWT tokens for authentication (no sessions)
+- Use Gemini API (NOT Claude) for content personalization
+- All edits stored in localStorage (no backend/database for edits)
+- User data stored in FastAPI backend (in-memory or SQLite)
+- Edits are personal (not shared between users)
+- Existing Docusaurus book content remains unchanged
+- Features added as wrapper components around existing content
+- Handle API errors gracefully (show error message, don't crash)
+- Show loading states during API calls
+- CORS must be enabled in FastAPI for frontend to connect
+
+## Success Criteria:
+✅ FastAPI backend with JWT authentication working
+✅ Signup collects 5 background questions
+✅ Login validates credentials and returns JWT token
+✅ Token verification on protected routes
+✅ Personalize button uses Gemini API to adjust content difficulty
+✅ Edit button saves personal edits to localStorage
+✅ All features visible only when logged in
+✅ Type-safe TypeScript code throughout
+✅ Works with existing Docusaurus book without breaking it
 ```
 
 ## Testing Checklist

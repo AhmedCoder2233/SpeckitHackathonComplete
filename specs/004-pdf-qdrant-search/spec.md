@@ -1,6 +1,6 @@
 # Feature Specification: PDF Upload and Search System with Qdrant Vector Database
 
-**Feature Branch**: `001-pdf-qdrant-search`  
+**Feature Branch**: `004-pdf-qdrant-search`  
 **Created**: November 29, 2025  
 **Status**: Draft  
 **Input**: User description: "# PDF Upload and Search System with Qdrant Vector Database

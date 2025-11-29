@@ -1,8 +1,8 @@
-# Specification Quality Checklist: PDF Upload and Search System with Qdrant Vector Database
+# Specification Quality Checklist: Add Authentication and Personalization to Docusaurus Book
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
-**Created**: November 29, 2025
-**Feature**: [specs/004-pdf-qdrant-search/spec.md](specs/004-pdf-qdrant-search/spec.md)
+**Created**: 2025-11-29
+**Feature**: [specs/006-auth-personalization/spec.md]
 
 ## Content Quality
 
@@ -30,5 +30,5 @@
 - [X] No implementation details leak into specification
 
 ## Notes
-
 - Items marked incomplete require spec updates before `/sp.clarify` or `/sp.plan`
+- **Accepted Deviations**: The specification includes explicit technical details (e.g., FastAPI, JWT, Gemini API, TypeScript) within the Functional Requirements. This is a deliberate choice given the highly technical and detailed nature of the user's initial request, which explicitly defined the tech stack. While a purely business-focused spec would abstract these, their inclusion here ensures fidelity to the user's detailed implementation constraints.

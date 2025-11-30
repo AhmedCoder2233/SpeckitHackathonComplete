@@ -2,30 +2,11 @@ import type {ReactNode} from 'react';
 import Layout from '@theme/Layout';
 import HeroSection from '@site/src/components/HeroSection';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
-import { useInView } from 'react-intersection-observer';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import Heading from '@theme/Heading';
 
 import styles from './index.module.css';
-
-interface FadeInSectionProps {
-  children: ReactNode;
-  className?: string;
-}
-
-const FadeInSection = ({ children, className }: FadeInSectionProps) => {
-  const { ref, inView } = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  return (
-    <div ref={ref} className={clsx(className, styles.fadeInSection, { [styles.isVisible]: inView })}>
-      {children}
-    </div>
-  );
-};
 
 export default function Home(): ReactNode {
   return (
@@ -37,7 +18,7 @@ export default function Home(): ReactNode {
         <HeroSection />
         
         {/* Overview Section */}
-        <FadeInSection className={clsx('container padding-vert--xl', styles.overviewSection)}>
+        <div className={clsx('container padding-vert--xl', styles.overviewSection)}>
           <div className="row">
             <div className="col col--8 col--offset-2 text--center">
               <h2 className={clsx('margin-bottom--lg', styles.sectionTitle)}>
@@ -48,18 +29,18 @@ export default function Home(): ReactNode {
               </p>
             </div>
           </div>
-        </FadeInSection>
+        </div>
         
         {/* Modules Section */}
-        <FadeInSection className={clsx('container padding-vert--xl text--center', styles.modulesSection)}>
+        <div className={clsx('container padding-vert--xl text--center', styles.modulesSection)}>
           <h2 className={clsx('margin-bottom--lg', styles.sectionTitle)}>
             <span className={styles.titleUnderline}>Course Modules</span>
           </h2>
           <HomepageFeatures />
-        </FadeInSection>
+        </div>
         
         {/* Learning Outcomes Section */}
-        <FadeInSection className={clsx('container padding-vert--xl', styles.outcomesSection)}>
+        <div className={clsx('container padding-vert--xl', styles.outcomesSection)}>
           <div className="row">
             <div className="col col--8 col--offset-2 text--center">
               <h2 className={clsx('margin-bottom--lg', styles.sectionTitle)}>
@@ -112,10 +93,10 @@ export default function Home(): ReactNode {
               </div>
             </div>
           </div>
-        </FadeInSection>
+        </div>
         
         {/* Why Physical AI Matters Section */}
-        <FadeInSection className={clsx('hero hero--primary margin-bottom--xl', styles.quoteSection)}>
+        <div className={clsx('hero hero--primary margin-bottom--xl', styles.quoteSection)}>
           <div className="container">
             <div className="row">
               <div className="col col--10 col--offset-1 text--center">
@@ -128,10 +109,10 @@ export default function Home(): ReactNode {
               </div>
             </div>
           </div>
-        </FadeInSection>
+        </div>
         
         {/* Hardware Requirements Section */}
-        <FadeInSection className={clsx('container padding-vert--xl text--center', styles.hardwareSection)}>
+        <div className={clsx('container padding-vert--xl text--center', styles.hardwareSection)}>
           <h2 className={clsx('margin-bottom--lg', styles.sectionTitle)}>
             <span className={styles.titleUnderline}>Hardware Requirements</span>
           </h2>
@@ -181,7 +162,7 @@ export default function Home(): ReactNode {
               <span className={styles.buttonArrowHardware}>→</span>
             </Link>
           </div>
-        </FadeInSection>
+        </div>
       </main>
     </Layout>
   );

@@ -2,11 +2,19 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
+import 'dotenv/config';  // ✅ Yeh pehle hi hai
+console.log('🔑 OPEN_AI_API_KEY:', process.env.OPENAI_API_KEY ? 'Loaded ✅' : 'Missing ❌');
+
 const config: Config = {
   title: 'Physical AI & Humanoid Robotics',
   tagline: 'The Ultimate Guide to Embodied Intelligence',
   favicon: 'img/favicon.ico',
 
+  
+  customFields: {
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,  // .env se read karega
+  },
+  
   future: {
     v4: true,
   },
@@ -34,7 +42,6 @@ const config: Config = {
   clientModules: [
     require.resolve('./src/components/Root.tsx'),
   ],
-
 
   presets: [
     [

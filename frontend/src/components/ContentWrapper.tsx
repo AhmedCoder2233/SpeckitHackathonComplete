@@ -4,15 +4,20 @@ import { authService } from '../services/authService';
 import { User } from '../types/user';
 import PersonalizeButton from './PersonalizeButton';
 import EditPageButton from './EditPageButton';
-import { getPersonalizedContent } from '../services/geminiService';
+import { getPersonalizedContent } from '../services/openaiService';
 import { getEditedContent, saveEditedContent, deleteEditedContent } from '../utils/editedContentManager';
 import { useLocation } from '@docusaurus/router';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext'; // ✅ Add this
 
 interface ContentWrapperProps {
   children: React.ReactNode;
 }
 
 const ContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
+  // ✅ Get API key from config
+  const { siteConfig } = useDocusaurusContext();
+  const openaiApiKey = siteConfig.customFields.OPENAI_API_KEY as string;
+  
   const [currentUser, setCurrentUser] = useState<User | null>(authService.getUser());
   const [isPersonalizing, setIsPersonalizing] = useState(false);
   const [personalizeError, setPersonalizeError] = useState<string | null>(null);
@@ -72,6 +77,12 @@ const ContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
       return;
     }
 
+    // ✅ Check if API key exists
+    if (!openaiApiKey) {
+      setPersonalizeError("Gemini API key is not configured. Please check your .env file.");
+      return;
+    }
+
     setIsPersonalizing(true);
     setPersonalizeError(null);
     
@@ -82,10 +93,12 @@ const ContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
         throw new Error("Content is too short to personalize.");
       }
 
+      // ✅ Pass API key as 4th parameter
       const personalizedHtml = await getPersonalizedContent(
         contentToPersonalize,
         currentUser.preferences,
-        document.title
+        document.title,
+        openaiApiKey  // ✅ Add this!
       );
       
       setPersonalizedContent(personalizedHtml);
@@ -96,7 +109,7 @@ const ContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
     } finally {
       setIsPersonalizing(false);
     }
-  }, [currentUser, pageId]);
+  }, [currentUser, pageId, openaiApiKey]); // ✅ Add openaiApiKey to dependencies
 
   // Editing Logic
   const handleEditToggle = useCallback((editing: boolean) => {

@@ -1,41 +1,32 @@
-// frontend/src/services/geminiService.ts
-import { GoogleGenerativeAI } from '@google/generative-ai';
+// frontend/src/services/openaiService.ts
+import OpenAI from 'openai';
 import { UserPreferences } from '../types/user';
 
-// Get API key from window (injected by Root component)
-const getGeminiApiKey = (): string => {
-  if (typeof window !== 'undefined') {
-    // Docusaurus context se API key lo
-    const siteConfig = (window as any).__DOCUSAURUS_CONTEXT__?.siteConfig;
-    if (siteConfig?.customFields?.geminiApiKey) {
-      return siteConfig.customFields.geminiApiKey;
-    }
-  }
-  return 'AIzaSyDXfR1FIptDxpncSz3mddxiGtRCQPR0k6g'; 
-};
-
+// ✅ API key parameter se pass karo
 export const getPersonalizedContent = async (
   originalContent: string,
   userPreferences: UserPreferences,
-  pageTitle: string
+  pageTitle: string,
+  openaiApiKey: string // ✅ Parameter add kiya
 ): Promise<string> => {
-  const GEMINI_API_KEY = getGeminiApiKey();
   
-  if (!GEMINI_API_KEY) {
-    throw new Error("Gemini API Key is not configured. Please add GEMINI_API_KEY to your .env file.");
+  if (!openaiApiKey) {
+    throw new Error("OpenAI API Key is not configured. Please add OPENAI_API_KEY to your .env file.");
   }
 
-  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' }); // CORRECT MODEL
+  const openai = new OpenAI({
+    apiKey: openaiApiKey,
+    dangerouslyAllowBrowser: true
+  });
 
   // Clean HTML - remove all tags and extra whitespace
   const cleanContent = originalContent
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove scripts
-    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '') // Remove styles
-    .replace(/<[^>]+>/g, ' ') // Remove all HTML tags
-    .replace(/\s+/g, ' ') // Normalize whitespace
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
     .trim()
-    .substring(0, 5000); // Limit to 5000 chars
+    .substring(0, 5000);
 
   if (!cleanContent || cleanContent.length < 50) {
     throw new Error("Content is too short or empty to personalize.");
@@ -93,32 +84,44 @@ ${cleanContent}
 Rewritten HTML:`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    let text = response.text();
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini', // Ya 'gpt-4o' use kar sakte ho
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a helpful technical documentation writer that adapts content for different skill levels.'
+        },
+        {
+          role: 'user',
+          content: prompt
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
+    });
+
+    let text = completion.choices[0]?.message?.content || '';
     
-    // Clean up the response
     text = text
       .replace(/```html\n?/gi, '')
       .replace(/```\n?/g, '')
-      .replace(/^#+\s+.*$/gm, '') // Remove markdown headers
+      .replace(/^#+\s+.*$/gm, '')
       .trim();
     
-    // Ensure we have actual content
     if (!text || text.length < 100) {
       throw new Error("Generated content is too short or empty.");
     }
     
     return text;
   } catch (error: any) {
-    console.error("Error calling Gemini API:", error);
+    console.error("Error calling OpenAI API:", error);
     
-    if (error.message?.includes('API_KEY_INVALID') || error.message?.includes('API key')) {
-      throw new Error("Invalid Gemini API Key. Please check your .env file.");
+    if (error.message?.includes('API key') || error.status === 401) {
+      throw new Error("Invalid OpenAI API Key. Please check your .env file.");
     }
     
-    if (error.message?.includes('not found')) {
-      throw new Error("Gemini model not available. Using 'gemini-pro' model.");
+    if (error.status === 429) {
+      throw new Error("Rate limit exceeded. Please try again later.");
     }
     
     throw new Error(`Personalization failed: ${error.message}`);

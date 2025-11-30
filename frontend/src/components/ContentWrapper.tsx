@@ -4,7 +4,7 @@ import { authService } from '../services/authService';
 import { User } from '../types/user';
 import PersonalizeButton from './PersonalizeButton';
 import EditPageButton from './EditPageButton';
-import { getPersonalizedContent } from '../services/openaiServicecd';
+import { getPersonalizedContent } from '../services/openaiService';
 import { getEditedContent, saveEditedContent, deleteEditedContent } from '../utils/editedContentManager';
 import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'; // ✅ Add this
